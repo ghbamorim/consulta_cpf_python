@@ -7,3 +7,5 @@ coverage.xml
 .history
 app/__init__.py
 cmd.txt
+.history
+.vscode
