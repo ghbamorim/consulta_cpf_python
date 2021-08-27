@@ -2,18 +2,10 @@ import sys
 sys.path.append(".")
 import requests, base64, json
 import datetime
-
-class Token_params:
-  client_id : str
-  client_secret : str
-
-class Cpf_params(Token_params):
-  user_cpf : str
-  cpfs_for_query : str
-
+from .params import Token_params, Cpf_params
 
 class Serpro_intf():
-    #Expira 5 minutos antes
+    #Token armazenado expira 5 minutos antes
     expiration_window = 6900
     lastTokenTime = 0
     access_token = '';

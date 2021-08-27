@@ -1,0 +1,9 @@
+*.pyc
+__pycache__
+.vscode
+.coverage
+coverage.xml
+.pytest_cache
+.history
+app/__init__.py
+cmd.txt
