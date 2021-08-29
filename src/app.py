@@ -1,10 +1,25 @@
 import json
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify, make_response
 from interfaces.serpro import Serpro_intf, Cpf_params
 from flask_restful import Api
+import jwt
+import datetime
+from fake_db import Db
 
 app = Flask(__name__)
-api = Api(app)
+
+app.config['SECRET'] = 'SECRET'
+
+@app.route("/login", methods=['GET'])
+def login():
+  auth = request.authorization
+  db = Db()
+  db.init_fake_db()
+  user = db.find_user(1, '123456')
+  if user:
+    token = jwt.encode({'public_id' : 'public_id', 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET']), 200
+    return jsonify({'token' : token})
+  return jsonify({'message': 'invalid login or password'}), 401
 
 @app.route("/dadosCpf", methods=['GET'])
 def getCpf():
