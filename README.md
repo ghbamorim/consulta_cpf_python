@@ -19,14 +19,14 @@
   ```
 ### Endpoints
 
-  /login
+  #### /login
     methodo GET
     parâmetros: 
       autenticação básica (USERNAME e PASSWORD)
       utilizar algum usuário e senha do banco de dados fake. Ex.: USERNAME: user01, PASSWORD: 123456
     retorno: token JWT para ser usado nas consultas
 
-  /cpfstatus
+  #### /cpfstatus
     methodo GET
     parâmetros:
       Header -> x-access-token = token obtido no login
