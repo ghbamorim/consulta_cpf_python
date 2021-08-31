@@ -3,7 +3,7 @@ import sys
 sys.path.append(".")
 import requests, base64, json
 import datetime
-from .params import Token_params, Cpf_params
+from models.params import Token_params, Cpf_params
 
 statusCodes = {
     0: "Regular",
@@ -20,7 +20,7 @@ class Serpro_intf():
     #Token armazenado expira 5 minutos antes
     expiration_window = 6900
     lastTokenTime = 0
-    access_token = ''
+    access_token = ""
 
     def consultaCpf(self, data: Cpf_params):
         compare_date = datetime.datetime.now() - datetime.timedelta(
@@ -31,11 +31,11 @@ class Serpro_intf():
             Serpro_intf.access_token = self.getToken(data)
             Serpro_intf.lastTokenTime = datetime.datetime.now()
 
-        uri = 'https://h-apigateway.conectagov.estaleiro.serpro.gov.br/api-cpf-light/v2/consulta/cpf'
+        uri = "https://h-apigateway.conectagov.estaleiro.serpro.gov.br/api-cpf-light/v2/consulta/cpf"
         headers = {
-            'content-type': 'application/json; charset=utf-8',
-            'x-cpf-usuario': data.user_cpf,
-            'authorization': 'Bearer %s' % Serpro_intf.access_token
+            "content-type": "application/json; charset=utf-8",
+            "x-cpf-usuario": data.user_cpf,
+            "authorization": "Bearer %s" % Serpro_intf.access_token
         }
 
         json_cpf = {"listaCpf": [data.cpf_for_query]}
@@ -45,25 +45,22 @@ class Serpro_intf():
         result = None
 
         for cpf in json_response:
-            result = {
-                'cpf': cpf['CPF'],
-                'status': statusCodes[cpf['SituacaoCadastral']]
-            }
+            result = {"status": statusCodes[cpf["SituacaoCadastral"]]}
         return result, json_response, response.status_code
 
     def getToken(self, data: Token_params) -> str:
-        uri = 'https://h-apigateway.conectagov.estaleiro.serpro.gov.br/oauth2/jwt-token'
+        uri = "https://h-apigateway.conectagov.estaleiro.serpro.gov.br/oauth2/jwt-token"
         authorization_base64 = base64.b64encode(
-            str(data.client_id + ':' + data.client_secret).encode('utf-8'))
+            str(data.client_id + ":" + data.client_secret).encode("utf-8"))
         headers = {
-            'content-type': 'application/x-www-form-urlencoded',
-            'authorization': 'Basic %s' % str(authorization_base64, 'utf-8')
+            "content-type": "application/x-www-form-urlencoded",
+            "authorization": "Basic %s" % str(authorization_base64, "utf-8")
         }
         params = {
-            'grant_type': 'client_credentials',
-            'scope': 'api-cpf-light-v1'
+            "grant_type": "client_credentials",
+            "scope": "api-cpf-light-v1"
         }
         response = requests.post(url=uri, headers=headers, data=params)
 
         json_response_token = json.loads(response.content)
-        return json_response_token['access_token']
+        return json_response_token["access_token"]

@@ -1,21 +1,24 @@
 import json
 from flask import Flask, request, Response, jsonify
-from interfaces.serpro import Serpro_intf, Cpf_params
+from interfaces.serpro import Serpro_intf
+from models.params import Cpf_params
 import jwt
 import datetime
-from fakedb import Db
-from auth import token_required
+from db.fakedb import Db
+from utils.auth import token_required
 import datetime
 
 app = Flask(__name__)
 
-app.config['SECRET'] = 'SECRET_KEY'
-app.config['TOKEN_EXPIRES_IN'] = 30  #minutes
+port = 5000
+app.config["SECRET"] = "SECRET_KEY"
+#tempo de duração do token
+app.config["TOKEN_EXPIRES_IN"] = 30
 
 db = Db()
 
 
-@app.route("/login", methods=['GET'])
+@app.route("/login", methods=["GET"])
 def login():
     auth = request.authorization
     user_name = auth.username
@@ -25,19 +28,19 @@ def login():
     if user:
         token = jwt.encode(
             {
-                'public_id':
+                "public_id":
                 user.id,
-                'exp':
+                "exp":
                 datetime.datetime.utcnow() +
-                datetime.timedelta(minutes=app.config['TOKEN_EXPIRES_IN'])
+                datetime.timedelta(minutes=app.config["TOKEN_EXPIRES_IN"])
             },
-            app.config['SECRET'],
+            app.config["SECRET"],
             algorithm="HS256")
-        return jsonify({'token': token})
-    return jsonify({'message': 'invalid login or password'}), 401
+        return jsonify({"token": token}), 200
+    return jsonify({"message": "invalid login or password"}), 401
 
 
-@app.route("/cpfstatus", methods=['GET'])
+@app.route("/cpfstatus", methods=["GET"])
 @token_required
 def getCpf(user):
     body = request.get_json()
@@ -45,11 +48,9 @@ def getCpf(user):
     try:
 
         cpf_params = Cpf_params()
-        cpf_params.client_id = body[
-            'client_id']  #'8ddc46f2-f6a3-4077-9e04-74b55de934a5'
-        cpf_params.client_secret = body[
-            'client_secret']  #'06d4aaac-1412-45f6-bd7c-38b2bef0d706'
-        cpf_params.user_cpf = body['user_cpf']
+        cpf_params.client_id = body["client_id"]
+        cpf_params.client_secret = body["client_secret"]
+        cpf_params.user_cpf = body["user_cpf"]
         cpf_params.cpf_for_query = body["cpf"]
 
         serpro_intf = Serpro_intf()
@@ -58,18 +59,19 @@ def getCpf(user):
 
         print(
             "Time: {} - cpf: {} - Serpro return: {} - Status code: {}".format(
-                datetime.datetime.now(), result['cpf'], raw, status_code))
+                datetime.datetime.now(), cpf_params.cpf_for_query, raw,
+                status_code))
 
-        return json.dumps(result)
+        return json.dumps(result), 200
 
     except Exception as e:
-        print('Erro:', e)
-        return Response(json.dumps({'error': {
+        print("Erro:", e)
+        return Response(json.dumps({"error": {
             "reason": str(e)
         }}),
                         status=500,
-                        mimetype='application/json')
+                        mimetype="application/json")
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host='localhost', port=port, debug=True)
