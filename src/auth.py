@@ -1,6 +1,5 @@
 from flask import request, jsonify
 import jwt
-from fakedb import Db
 from functools import wraps
 
 

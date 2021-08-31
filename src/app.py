@@ -10,7 +10,8 @@ import datetime
 app = Flask(__name__)
 
 app.config["SECRET"] = "SECRET_KEY"
-app.config["TOKEN_EXPIRES_IN"] = 30  #minutes
+#tempo de duração do token
+app.config["TOKEN_EXPIRES_IN"] = 30
 
 db = Db()
 
@@ -45,10 +46,8 @@ def getCpf(user):
     try:
 
         cpf_params = Cpf_params()
-        cpf_params.client_id = body[
-            "client_id"]  #"8ddc46f2-f6a3-4077-9e04-74b55de934a5"
-        cpf_params.client_secret = body[
-            "client_secret"]  #"06d4aaac-1412-45f6-bd7c-38b2bef0d706"
+        cpf_params.client_id = body["client_id"]
+        cpf_params.client_secret = body["client_secret"]
         cpf_params.user_cpf = body["user_cpf"]
         cpf_params.cpf_for_query = body["cpf"]
 
