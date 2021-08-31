@@ -1,11 +1,11 @@
 import json
 from flask import Flask, request, Response, jsonify, make_response
 from interfaces.serpro import Serpro_intf, Cpf_params
-from flask_restful import Api
 import jwt
 import datetime
-from fake_db import Db
+from fakedb import Db
 from functools import wraps
+import datetime
 
 app = Flask(__name__)
 
@@ -31,9 +31,9 @@ def token_required(f):
         try:
             user = db.find_by_id(jwt_data['public_id'])
             if not user:
-                return jsonify({'message': 'Inválid token'}), 401
+                return jsonify({'message': 'Invalid token'}), 401
         except:
-            return jsonify({'message': 'Inválid token'}), 401
+            return jsonify({'message': 'Invalid token'}), 401
         return f(user, *args, **kwargs)
 
     return decorated
@@ -61,7 +61,7 @@ def login():
     return jsonify({'message': 'invalid login or password'}), 401
 
 
-@app.route("/dadosCpf", methods=['GET'])
+@app.route("/cpfstatus", methods=['GET'])
 @token_required
 def getCpf(user):
     body = request.get_json()
@@ -74,17 +74,26 @@ def getCpf(user):
         cpf_params.client_secret = body[
             'client_secret']  #'06d4aaac-1412-45f6-bd7c-38b2bef0d706'
         cpf_params.user_cpf = body['user_cpf']
-        cpf_params.cpfs_for_query = body["cpfs"]
+        cpf_params.cpf_for_query = body["cpf"]
 
         serpro_intf = Serpro_intf()
-        return json.dumps(serpro_intf.consultaCpf(cpf_params))
+
+        result, raw, status_code = serpro_intf.consultaCpf(cpf_params)
+
+        print(
+            "Time: {} - cpf: {} - Serpro return: {} - Status code: {}".format(
+                datetime.datetime.now(), result['cpf'], raw, status_code))
+
+        return json.dumps(result)
 
     except Exception as e:
         print('Erro:', e)
-        return Response(json.dumps({'error': str(e)}),
+        return Response(json.dumps({'error': {
+            "reason": str(e)
+        }}),
                         status=500,
                         mimetype='application/json')
 
 
-#if __name__ == '__main__':
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
