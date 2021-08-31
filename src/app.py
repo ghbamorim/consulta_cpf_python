@@ -10,6 +10,7 @@ import datetime
 
 app = Flask(__name__)
 
+port = 5000
 app.config["SECRET"] = "SECRET_KEY"
 #tempo de duração do token
 app.config["TOKEN_EXPIRES_IN"] = 30
@@ -73,4 +74,4 @@ def getCpf(user):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='localhost', port=port, debug=True)

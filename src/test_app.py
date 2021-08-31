@@ -1,10 +1,10 @@
 from requests.models import Response
-from app import login
+from app import port
 import requests
 import json
 from base64 import b64encode
 
-uri = "http://127.0.0.1:5000"
+uri = "http://127.0.0.1:{}".format(port)
 
 token = ""
 
