@@ -35,7 +35,7 @@ def login():
             },
             app.config["SECRET"],
             algorithm="HS256")
-        return jsonify({"token": token})
+        return jsonify({"token": token}), 200
     return jsonify({"message": "invalid login or password"}), 401
 
 
@@ -61,7 +61,7 @@ def getCpf(user):
                 datetime.datetime.now(), cpf_params.cpf_for_query, raw,
                 status_code))
 
-        return json.dumps(result)
+        return json.dumps(result), 200
 
     except Exception as e:
         print("Erro:", e)
@@ -73,4 +73,4 @@ def getCpf(user):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)

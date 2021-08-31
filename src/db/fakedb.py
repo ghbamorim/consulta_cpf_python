@@ -37,5 +37,9 @@ class Db():
                      if user.name == user_name and user.password == password),
                     None)
 
+    def get_test_user(self):
+        return next((user for user in self.db
+                     if user.name != None and user.password != None), None)
+
     def __init__(self):
         self.init_fake_db()
