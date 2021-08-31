@@ -24,7 +24,7 @@
     parâmetros: 
       autenticação básica (USERNAME e PASSWORD)
       utilizar algum usuário e senha do banco de dados fake. Ex.: USERNAME: user01, PASSWORD: 123456
-    retorno: token JWT para ser usado nas consultas
+    retorno: token JWT para ser usado nas consultas com duração de 30 minutos
 
   #### /cpfstatus
     methodo GET
@@ -39,6 +39,5 @@
     retorno:
       json no formato:
         {
-          "cpf": "77689062768",
           "status": "Regular"
         }

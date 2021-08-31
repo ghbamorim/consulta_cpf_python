@@ -45,10 +45,7 @@ class Serpro_intf():
         result = None
 
         for cpf in json_response:
-            result = {
-                'cpf': cpf['CPF'],
-                'status': statusCodes[cpf['SituacaoCadastral']]
-            }
+            result = {'status': statusCodes[cpf['SituacaoCadastral']]}
         return result, json_response, response.status_code
 
     def getToken(self, data: Token_params) -> str:

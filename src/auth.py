@@ -15,9 +15,11 @@ def token_required(f):
         if not token:
             return jsonify({'message': 'Missing token'}), 401
         from app import app, db
-        jwt_data = jwt.decode(token, app.config['SECRET'], algorithms="HS256")
 
         try:
+            jwt_data = jwt.decode(token,
+                                  app.config['SECRET'],
+                                  algorithms="HS256")
             user = db.find_by_id(jwt_data['public_id'])
             if not user:
                 return jsonify({'message': 'Invalid token'}), 401
