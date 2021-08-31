@@ -69,10 +69,12 @@ def getCpf(user):
     try:
 
         cpf_params = Cpf_params()
-        cpf_params.client_id = '8ddc46f2-f6a3-4077-9e04-74b55de934a5'
-        cpf_params.client_secret = '06d4aaac-1412-45f6-bd7c-38b2bef0d706'
-        cpf_params.user_cpf = '00993162428'
-        cpf_params.cpfs_for_query = body["cpf"]
+        cpf_params.client_id = body[
+            'client_id']  #'8ddc46f2-f6a3-4077-9e04-74b55de934a5'
+        cpf_params.client_secret = body[
+            'client_secret']  #'06d4aaac-1412-45f6-bd7c-38b2bef0d706'
+        cpf_params.user_cpf = body['user_cpf']
+        cpf_params.cpfs_for_query = body["cpfs"]
 
         serpro_intf = Serpro_intf()
         return json.dumps(serpro_intf.consultaCpf(cpf_params))
