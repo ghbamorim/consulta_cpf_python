@@ -3,7 +3,7 @@ import sys
 sys.path.append(".")
 import requests, base64, json
 import datetime
-from .params import Token_params, Cpf_params
+from models.params import Token_params, Cpf_params
 
 statusCodes = {
     0: "Regular",

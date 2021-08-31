@@ -1,7 +1,6 @@
-from users import Users
+from models.users import Users
 
 
-#deveria estar na pasta db
 class Db():
     db = []
 

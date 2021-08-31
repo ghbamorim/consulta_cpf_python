@@ -1,10 +1,11 @@
 import json
 from flask import Flask, request, Response, jsonify
-from interfaces.serpro import Serpro_intf, Cpf_params
+from interfaces.serpro import Serpro_intf
+from models.params import Cpf_params
 import jwt
 import datetime
-from fakedb import Db
-from auth import token_required
+from db.fakedb import Db
+from utils.auth import token_required
 import datetime
 
 app = Flask(__name__)
