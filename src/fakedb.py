@@ -1,6 +1,7 @@
 from users import Users
 
 
+#deveria estar na pasta db
 class Db():
     db = []
 
