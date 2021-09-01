@@ -1,4 +1,7 @@
-from requests.models import Response
+#esse arquivo de testes funciona apenas se a api estiver sendo executada
+#em outro prompt de comando. Deixei o arquivo sem a extensão py para
+#evitar que seja executado no pytest.
+
 from app import port
 import requests
 import json
