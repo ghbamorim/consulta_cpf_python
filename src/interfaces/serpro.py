@@ -1,6 +1,5 @@
 import sys
 
-sys.path.append(".")
 import requests, base64, json
 import datetime
 from models.params import Token_params, Cpf_params
