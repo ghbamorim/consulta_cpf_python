@@ -2,7 +2,6 @@ from requests.models import Response
 from app import port
 import requests
 import json
-from flask import Flask, request, Response, jsonify
 from base64 import b64encode
 
 uri = "http://127.0.0.1:{}".format(port)
@@ -16,13 +15,26 @@ def test_login():
 
     headers = {"authorization": 'Basic %s' % userAndPass}
 
-    #response = requests.get(url=uri + "/login", headers=headers)
-    app = Flask(__name__)
+    response = requests.get(url=uri + "/login", headers=headers)
+    result = json.loads(response.content)
 
-    client = app.test_client()
-    response = client.get('/login', headers=headers)
-
-    result = response.get_data()
-
-    #token = result["token"]
+    token = result["token"]
     assert response.status_code == 200 and token is not None
+
+
+def test_cpfstatus():
+    global token
+    headers = {"x-access-token": token}
+
+    body = {
+        "client_id": "8ddc46f2-f6a3-4077-9e04-74b55de934a5",
+        "client_secret": "06d4aaac-1412-45f6-bd7c-38b2bef0d706",
+        "user_cpf": "77689062768",
+        "cpf": "77689062768"
+    }
+
+    response = requests.get(url=uri + "/cpfstatus", headers=headers, json=body)
+    result = json.loads(response.content)
+
+    print(result)
+    assert response.status_code == 200 and token is not None and "status" in result
