@@ -1,17 +1,16 @@
-import json
-from flask import Flask, request, Response, jsonify
-from interfaces.serpro import Serpro_intf
-from models.params import Cpf_params
-import jwt
-import datetime
-from db.fakedb import Db
-from utils.auth import token_required
-import datetime
-
 port = 5000
 
 
 def create_app():
+    import json
+    from flask import Flask, request, Response, jsonify
+    from interfaces.serpro import Serpro_intf
+    from models.params import Cpf_params
+    import datetime
+    from db.fakedb import Db
+    import datetime
+    import jwt
+    from functools import wraps
 
     app = Flask(__name__)
 
@@ -20,6 +19,30 @@ def create_app():
     app.config["TOKEN_EXPIRES_IN"] = 30
 
     db = Db()
+
+    def token_required(f):
+        @wraps(f)
+        def decorated(*args, **kwargs):
+            token = None
+
+            if "x-access-token" in request.headers:
+                token = request.headers["x-access-token"]
+
+            if not token:
+                return jsonify({"message": "Missing token"}), 401
+
+            try:
+                jwt_data = jwt.decode(token,
+                                      app.config["SECRET"],
+                                      algorithms="HS256")
+                user = db.find_by_id(jwt_data["public_id"])
+                if not user:
+                    return jsonify({"message": "Invalid token"}), 401
+            except:
+                return jsonify({"message": "Invalid token"}), 401
+            return f(user, *args, **kwargs)
+
+        return decorated
 
     @app.route("/login", methods=["GET"])
     def login():

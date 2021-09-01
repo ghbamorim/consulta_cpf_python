@@ -1,4 +1,3 @@
-from requests.models import Response
 from app import create_app
 import json
 from base64 import b64encode
@@ -20,7 +19,8 @@ def test_login():
     result = json.loads(response.get_data())
 
     token = result["token"]
-    assert response.status_code == 200 and token is not None
+    assert response.status_code == 200
+    assert token is not None
 
 
 def test_cpfstatus():
@@ -40,4 +40,5 @@ def test_cpfstatus():
     response = client.get("/cpfstatus", headers=headers, json=body)
     result = json.loads(response.get_data())
 
-    assert response.status_code == 200 and token is not None and "status" in result
+    assert response.status_code == 200
+    assert "status" in result

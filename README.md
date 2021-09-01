@@ -41,3 +41,10 @@
         {
           "status": "Regular"
         }
+
+## Testes
+  executar no diretório principal
+
+  ```bash
+  pytest
+  ```
