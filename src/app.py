@@ -1,6 +1,3 @@
-port = 5000
-
-
 def create_app():
     import json
     from flask import Flask, request, Response, jsonify
@@ -98,6 +95,8 @@ def create_app():
 
     return app
 
+
+port = 5000
 
 if __name__ == "__main__":
     create_app().run(host='localhost', port=port, debug=True)
