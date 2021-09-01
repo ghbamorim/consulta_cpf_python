@@ -75,3 +75,4 @@ def getCpf(user):
 
 if __name__ == "__main__":
     app.run(host='localhost', port=port, debug=True)
+
